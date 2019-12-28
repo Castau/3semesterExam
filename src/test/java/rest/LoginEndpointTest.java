@@ -119,7 +119,7 @@ public class LoginEndpointTest {
         given().when().get("/info").then().statusCode(200);
     }
 
-    @Test
+    //@Test
     public void testFiveSwapi() {
         login("admin", "test");
         given()
