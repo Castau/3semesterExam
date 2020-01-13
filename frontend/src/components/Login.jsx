@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Badge } from 'react-bootstrap';
-import "bootstrap/dist/css/bootstrap.min.css";
 
 export const LogIn = ({ login, message }) => {
   const [user, setUser] = useState({ username: "", password: "" });
@@ -16,7 +15,8 @@ export const LogIn = ({ login, message }) => {
 
   return (
     <div>
-      <h3 className="mt-3 mb-3"> <Badge variant="info">Please log in to use the application</Badge></h3>
+      <h3 className="mt-2"> <Badge variant="info">Please log in to use the application</Badge></h3>
+      <h4> <Badge variant="danger">{message}</Badge></h4>
       <form onSubmit={log_in}>
         <input placeholder="User Name" id="username" onChange={onChange} />{" "}
         <input
@@ -27,7 +27,6 @@ export const LogIn = ({ login, message }) => {
         />{" "}
         <button className="btn-dark">Login</button>
         <br></br>
-        <p>{message}</p>
       </form>
     </div>
   );
@@ -37,7 +36,7 @@ export const LoggedIn = () => {
 
   return (
     <>
-      <h2>You are now logged in</h2>
+      <h1 className="mb-3"> <Badge variant="info">You are now logged in</Badge></h1>
       {/* <Link to="/search">Searching tool</Link> */}
       <br></br>
       <br></br>

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import facade from "./apiFacade";
-import "bootstrap/dist/css/bootstrap.min.css";
 import WelcomePage from "./components/Welcome.jsx";
 import LogInScreen from "./components/LogInScreen.jsx";
+import "bootstrap/dist/css/bootstrap.min.css";
+import './index.css';
+import './Welcome.css';
 import './App.css'
 
 import {

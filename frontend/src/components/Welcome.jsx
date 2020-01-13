@@ -1,7 +1,5 @@
 import React from 'react';
 import { Badge } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../Welcome.css';
 
 const Welcome = () => {
   return (
