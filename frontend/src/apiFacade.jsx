@@ -1,4 +1,4 @@
-import { localURL as URL } from "./settings.js";
+import { onlineURL as URL } from "./settings.js";
 
 function handleHttpErrors(res) {
   if (!res.ok) {
