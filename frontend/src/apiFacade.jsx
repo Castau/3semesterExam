@@ -1,5 +1,5 @@
-//Change this before deployment (production)
 import { localURL as URL } from "./settings.js";
+
 function handleHttpErrors(res) {
   if (!res.ok) {
     return Promise.reject({ status: res.status, fullError: res.json() });
@@ -8,7 +8,6 @@ function handleHttpErrors(res) {
 }
 
 const ApiFacade = () => {
-  //Insert utility-methods from a latter step (d) here
   function makeOptions(method, addToken, body) {
     var opts = {
       method: method,
@@ -39,13 +38,6 @@ const ApiFacade = () => {
     return loggedIn;
   }
 
-  // const fetchSwapi = () => {
-  //   //Remember to always include options from the makeOptions fucntion with >true< as the second parameter
-  //   //if you want to access a protected endpoint
-  //   const options = makeOptions("GET", true); //True add's the token
-  //   return fetch(URL + "/api/info/five", options).then(handleHttpErrors);
-  // };
-
   const fetchGetData = (endpoint, value) => {
     const options = makeOptions("GET", true); //True add's the token
     return fetch(URL + `/api/info/${endpoint}/${value}`, options).then(handleHttpErrors);
@@ -72,26 +64,6 @@ const ApiFacade = () => {
       });
   };
 
-  const add = (hobby) => {
-    const options = makeOptions("POST", true, {
-      id: hobby.id,
-      hobbyName: hobby.hobbyName,
-      hobbyDescription: hobby.hobbyDescription
-    });
-    return fetch(URL + "/api/krak/admin/hobby/add", options)
-      .then(handleHttpErrors);
-  };
-
-  const edit = (hobby) => {
-    const options = makeOptions("PUT", true, {
-      id: hobby.id,
-      hobbyName: hobby.hobbyName,
-      hobbyDescription: hobby.hobbyDescription
-    });
-    return fetch(URL + "/api/krak/admin/hobby/edit", options)
-      .then(handleHttpErrors);
-  };
-
   const logout = () => {
     localStorage.removeItem("jwtToken");
   };
@@ -99,9 +71,7 @@ const ApiFacade = () => {
   return {
     login,
     logout,
-    fetchGetData,
-    add,
-    edit
+    fetchGetData
   };
 };
 

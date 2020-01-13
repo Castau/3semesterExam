@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import facade from "./apiFacade";
 import "bootstrap/dist/css/bootstrap.min.css";
 import WelcomePage from "./components/Welcome.jsx";
-import Search from "./components/Search.jsx";
-import Admin from "./components/Admin.jsx";
 import LogInScreen from "./components/LogInScreen.jsx";
 import './App.css'
 
@@ -36,15 +34,6 @@ const App = () => {
                 setLoggedIn={setLoggedIn}
                 roles={roles}
                 setRoles={setRoles} />
-            </Route>
-            <Route path="/search">
-              <Search
-                permission={loggedIn} />
-            </Route>
-            <Route path="/admin">
-              <Admin
-                loggedIn={loggedIn}
-                roles={roles} />
             </Route>
             <Route
               component={NoMatch} />
@@ -86,24 +75,6 @@ const Header = ({ loggedIn, setLoggedIn, roles, setRoles }) => {
             setRoles([]);
           }} to="/login">
             Log out
-        </NavLink>
-        </li>
-      }
-
-      {/*Permission user*/}
-      {loggedIn &&
-        <li>
-          <NavLink to="/search">
-            Search
-        </NavLink>
-        </li>
-      }
-
-      {/*Permission admin*/}
-      {loggedIn && roles.includes("admin") &&
-        <li>
-          <NavLink to="/admin">
-            Admin panel
         </NavLink>
         </li>
       }
