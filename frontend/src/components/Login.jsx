@@ -68,9 +68,6 @@ export const LogIn = ({ login, message }) => {
                 <ListGroup.Item>
                   <p className="mb-0">User: therealhat</p><p className="mb-0"> Pass: tophat</p>
                 </ListGroup.Item>
-                <ListGroup.Item>
-                  <p className="mb-0">User: noone</p><p className="mb-0"> Pass: arya</p>
-                </ListGroup.Item>
               </ListGroup>
             </Card.Body>
           </Card>
