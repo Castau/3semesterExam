@@ -3,7 +3,7 @@ import { Badge, Card, ListGroup, CardGroup, Container, Row } from 'react-bootstr
 
 const Welcome = () => {
   return (
-    <>
+    <div>
       {/* <Link to="/search">Searching tool</Link> */}
 
       <Container className="mt-5 mb-5">
@@ -11,10 +11,8 @@ const Welcome = () => {
           <CardGroup className="w-50">
             <Card className="mr-2">
               <Card.Body>
-                <Card.Title><h1 className="mt-3 mb-1"> <Badge className="w-100" variant="info">3. semester exam project</Badge></h1></Card.Title>
-                <Card.Text>
-                  <Card.Title><h5> <Badge className="w-100" variant="info">Made by Camilla Jenny Valerius Staunstrup</Badge></h5></Card.Title>
-                </Card.Text>
+                <h1 className="mt-3 mb-1"> <Badge className="w-100" variant="info">3. semester exam project</Badge></h1>
+                <h5><Badge className="w-100" variant="info">Made by Camilla Jenny Valerius Staunstrup</Badge></h5>
                 <ListGroup className="about_link_github" variant="flush">
                   <ListGroup.Item>
                     <a href="cph-cs340@cphbusiness.dk" target="blank">cph-cs340@cphbusiness.dk</a>
@@ -40,16 +38,16 @@ const Welcome = () => {
           <CardGroup className="w-50">
             <Card className="mr-2">
               <Card.Body>
-                <Card.Title><h5> <Badge className="w-100" variant="info">Hvad nåede jeg</Badge></h5></Card.Title>
+                <h5> <Badge className="w-100" variant="info">Hvad nåede jeg</Badge></h5>
                 <Card.Text>
-                  <p>Jeg nåede det her</p>
+                  Jeg nåede det her
                 </Card.Text>
               </Card.Body>
             </Card>
           </CardGroup>
         </Row>
       </Container>
-    </>
+    </div>
   );
 };
 

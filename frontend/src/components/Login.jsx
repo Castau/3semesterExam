@@ -1,6 +1,6 @@
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import facade from "../apiFacade";
-import { Badge, Card, Container, Row, CardGroup, CardColumns, ListGroup } from 'react-bootstrap';
+import { Badge, Card, Container, Row, ListGroup } from 'react-bootstrap';
 
 export const LogIn = ({ login, message }) => {
   const [user, setUser] = useState({ username: "", password: "" });
@@ -48,12 +48,10 @@ export const LogIn = ({ login, message }) => {
         <Row >
           <Card className="w-25">
             <Card.Body>
-              <Card.Title><h5><Badge variant="info">Supply database with data</Badge></h5></Card.Title>
-              <Card.Text>
-                <button className="btn-dark mb-3" onClick={handleClick}>Generate data</button>
-                <p className="mt-3">{data.message} </p>
-                <h5><Badge variant="info">Test Users</Badge></h5>
-              </Card.Text>
+              <h5><Badge variant="info">Supply database with data</Badge></h5>
+              <button className="btn-dark mb-3" onClick={handleClick}>Generate data</button>
+              <p className="mt-3">{data.message} </p>
+              <h5><Badge variant="info">Test Users</Badge></h5>
               <ListGroup className="about_link" variant="flush">
                 <ListGroup.Item>
                   <p className="mb-0">User: admin</p><p className="mb-0"> Pass: admin</p>
