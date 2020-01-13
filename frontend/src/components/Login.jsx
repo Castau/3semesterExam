@@ -18,7 +18,7 @@ export const LogIn = ({ login, message }) => {
 
   return (
     <div>
-      <h3 className="mt-3 mb-3"> <Badge variant="secondary">Please log in to use the application</Badge></h3>
+      <h3 className="mt-3 mb-3"> <Badge variant="info">Please log in to use the application</Badge></h3>
       <form onSubmit={log_in}>
         <input placeholder="User Name" id="username" onChange={onChange} />{" "}
         <input

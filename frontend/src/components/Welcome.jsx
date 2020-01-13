@@ -1,15 +1,14 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Badge } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Welcome.css';
 
 const Welcome = () => {
-	return (
-		<>
-		<br></br>
-		<h3>3. semester exam template project</h3>
-		</>
-	);
+  return (
+    <>
+      <h1 className="mt-3 mb-5"> <Badge variant="info">3. semester exam template project</Badge></h1>
+    </>
+  );
 };
 
 export default Welcome;
