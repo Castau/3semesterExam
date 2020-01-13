@@ -11,6 +11,8 @@
     "react-scripts": "3.2.0"
   },
   "scripts": {
+	"predeploy": "npm run build",
+    "myDeploy": "react-scripts build && surge --project ./build --domain https://sem3exam-camilla.surge.sh",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
