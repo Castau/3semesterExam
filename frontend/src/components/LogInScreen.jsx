@@ -37,20 +37,6 @@ const LogInScreen = ({ loggedIn, setLoggedIn, roles, setRoles }) => {
         </>
       }
     </>
-    // <div>
-    //   {!loggedIn ? (
-    //     <LogIn login={login} message={message} />
-    //   ) : (
-    //       <div>
-    // {roles.length &&
-    //   <>
-    //     <ShowRoles roles={roles} />
-    //     <LoggedIn />
-    //   </>
-    // }
-    //       </div>
-    //     )}
-    // </div>
   );
 };
 
