@@ -12,10 +12,10 @@ const Welcome = () => {
             <Card className="mr-2">
               <Card.Body>
                 <h1 className="mt-3 mb-1"> <Badge className="w-100" variant="info">3. semester exam project</Badge></h1>
-                <h5><Badge className="w-100" variant="info">Made by Camilla Jenny Valerius Staunstrup</Badge></h5>
+                <h5><Badge className="w-100" variant="info">Made by Camilla Jenny Valerius Staunstrup | cs340</Badge></h5>
                 <ListGroup className="about_link_github" variant="flush">
                   <ListGroup.Item>
-                    <a href="cph-cs340@cphbusiness.dk" target="blank">cph-cs340@cphbusiness.dk</a>
+                    <a href="mailto: cph-cs340@cphbusiness.dk" target="blank">cph-cs340@cphbusiness.dk</a>
                   </ListGroup.Item>
                   <ListGroup.Item>
                     <a href="https://github.com/Castau/3semesterExam" target="blank">GitHub Repository</a>
