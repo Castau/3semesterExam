@@ -38,19 +38,11 @@ public class ApiResource {
         return "{\"msg\":\"Hello anonymous\"}";
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("five")
-    @RolesAllowed({"admin", "user"})
-    public Map getDataFrom5Endpoints() throws Exception {
-        return facade.allApiData();
-    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("all")
     public String allUsers() {
-
         EntityManager em = EMF.createEntityManager();
         try {
             List<User> users = em.createQuery("select user from User user").getResultList();
@@ -78,37 +70,6 @@ public class ApiResource {
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";
     }
 
-    /**
-     * The idea is here, that this endpoint is only available to registered
-     * users (and admins) While the allUsers (/all) endpoint is available to
-     * anyone
-     *
-     * @return
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("both")
-    @RolesAllowed({"admin", "user"})
-    public String getMultipleRoles() {
-        String thisuser = securityContext.getUserPrincipal().getName();
-        return "{\"msg\": \"Hello to (admin OR user, but not a nobody) User: " + thisuser + "\"}";
-    }
-
-    /**
-     * DEPRECATED: DONT THINK THIS IS POSSIBLE. Only accessible by a super-user
-     * (that holds both admin & user)
-     *
-     * @return
-     */
-    @Deprecated
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("bothrestricted")
-    @RolesAllowed(value = {"admin, user"})
-    public String getBothRoles() {
-        String thisuser = securityContext.getUserPrincipal().getName();
-        return "{\"msg\": \"Hello to (superuser) User: " + thisuser + "\"}";
-    }
 
     @GET
     @Path("testdata")
