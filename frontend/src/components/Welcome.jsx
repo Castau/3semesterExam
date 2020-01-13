@@ -27,7 +27,7 @@ const Welcome = () => {
                     <a href="https://travis-ci.org/Castau/3semesterExam?utm_medium=notification&utm_source=github_status" target="blank">Travis Build Log</a>
                   </ListGroup.Item>
                   <ListGroup.Item>
-                    <a href="" target="blank">Link to exam</a>
+                    <a href=" " target="blank">Link to exam</a>
                   </ListGroup.Item>
                 </ListGroup>
               </Card.Body>

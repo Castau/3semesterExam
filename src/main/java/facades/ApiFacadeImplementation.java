@@ -121,14 +121,12 @@ public class ApiFacadeImplementation {
             User user2 = new User("karen77", "mortil3");
             User user3 = new User("vlad", "mrpresident");
             User user4 = new User("therealhat", "tophat");
-            User user5 = new User("noone", "arya");
             
             admin.addRole(adminRole);
             user1.addRole(userRole);
             user2.addRole(userRole);
             user3.addRole(userRole);
             user4.addRole(userRole);
-            user5.addRole(userRole);
             
             em.persist(userRole);
             em.persist(adminRole);
@@ -138,7 +136,6 @@ public class ApiFacadeImplementation {
             em.persist(user2);
             em.persist(user3);
             em.persist(user4);
-            em.persist(user5);
             em.getTransaction().commit();
 
             return true;
