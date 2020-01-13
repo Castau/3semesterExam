@@ -3,6 +3,8 @@ package facades;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import entities.Role;
+import entities.User;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -25,11 +29,30 @@ import org.apache.commons.lang3.tuple.Pair;
  *
  * @author Camilla
  */
-public class ApiFacade {
+public class ApiFacadeImplementation {
     private ExecutorService executor = Executors.newCachedThreadPool();
     private String url = "https://swapi.co/api/";
     private String[] ENDPOINTS = {"people/", "planets/", "starships/", "vehicles/", "species/"};
 
+    private static ApiFacadeImplementation facade;
+    private static EntityManagerFactory emf;
+
+    private ApiFacadeImplementation() {
+    }
+
+    public static ApiFacadeImplementation getApiFacade(EntityManagerFactory _emf) {
+        if (facade == null) {
+            emf = _emf;
+            facade = new ApiFacadeImplementation();
+        }
+        return facade;
+    }
+
+    private EntityManager getEntityManager() {
+        return emf.createEntityManager();
+    }
+    
+    
 
     public Map<String, String> allApiData() throws InterruptedException, ExecutionException, TimeoutException {
         Map<String, String> result = new HashMap();
@@ -77,5 +100,53 @@ public class ApiFacade {
             result = "";
         }
         return result;
+    }
+    
+    public boolean testData() {
+        EntityManager em = getEntityManager();
+
+        try {
+            em.getTransaction().begin();
+            em.createNamedQuery("User.deleteAllRows").executeUpdate();
+            em.createNamedQuery("Role.deleteAllRows").executeUpdate();
+            em.getTransaction().commit();
+        
+            em.getTransaction().begin();
+            
+            Role userRole = new Role("user");
+            Role adminRole = new Role("admin");
+            
+            User admin = new User("admin", "admin");
+            User user1 = new User("user", "user");
+            User user2 = new User("karen77", "mortil3");
+            User user3 = new User("vlad", "mrpresident");
+            User user4 = new User("therealhat", "tophat");
+            User user5 = new User("noone", "arya");
+            
+            admin.addRole(adminRole);
+            user1.addRole(userRole);
+            user2.addRole(userRole);
+            user3.addRole(userRole);
+            user4.addRole(userRole);
+            user5.addRole(userRole);
+            
+            em.persist(userRole);
+            em.persist(adminRole);
+            
+            em.persist(admin);
+            em.persist(user1);
+            em.persist(user2);
+            em.persist(user3);
+            em.persist(user4);
+            em.persist(user5);
+            em.getTransaction().commit();
+
+            return true;
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            return false;
+        } finally {
+            em.close();
+        }
     }
 }
