@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import facade from "../apiFacade";
 import { Badge, Card, Container, Row, ListGroup } from 'react-bootstrap';
 
-export const LogIn = ({ login, message }) => {
+export const LogIn = ({ login, loginErrorMessage }) => {
   const [user, setUser] = useState({ username: "", password: "" });
-  const [errorMessage, setErrorMessage] = useState('');
+  const [dummyDataErrorMessage, setDummyDataErrorMessage] = useState('');
   const [data, setData] = useState('');
 
   function log_in(evt) {
@@ -21,12 +21,12 @@ export const LogIn = ({ login, message }) => {
       .fetchGetData('testdata', '')
       .then(res => {
         setData(res);
-        setErrorMessage('');
+        setDummyDataErrorMessage('');
       })
       .catch(err => {
         if (err.status) {
           err.fullError.then(e => {
-            setErrorMessage(e.message);
+            setDummyDataErrorMessage(e.message);
             console.log(e.code, e.message);
           });
         } else {
@@ -38,7 +38,8 @@ export const LogIn = ({ login, message }) => {
   return (
     <div>
       <h3 className="mt-2"> <Badge variant="info">Please log in to use the application</Badge></h3>
-      <h4> <Badge variant="danger">{message}</Badge></h4>
+      <h4> <Badge variant="danger">{loginErrorMessage}</Badge></h4>
+      <h4> <Badge variant="danger">{dummyDataErrorMessage}</Badge></h4>
       <form onSubmit={log_in}>
         <input placeholder="User Name" id="username" onChange={onChange} />{" "}
         <input placeholder="Password" id="password" type="password" onChange={onChange} />
@@ -74,17 +75,5 @@ export const LogIn = ({ login, message }) => {
         </Row>
       </Container>
     </div>
-  );
-};
-
-export const LoggedIn = () => {
-
-  return (
-    <>
-      <h1 className="mb-3"> <Badge variant="info">You are now logged in</Badge></h1>
-      {/* <Link to="/search">Searching tool</Link> */}
-      <br></br>
-      <br></br>
-    </>
   );
 };
