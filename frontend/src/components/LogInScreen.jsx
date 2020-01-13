@@ -24,22 +24,33 @@ const LogInScreen = ({ loggedIn, setLoggedIn, roles, setRoles }) => {
   };
 
   return (
-    <div>
-      {!loggedIn ? (
+    <>
+      {!loggedIn &&
         <LogIn login={login} message={message} />
-      ) : (
-          <div>
-            {roles.length &&
-              <>
-                <ShowRoles roles={roles} />
-                <LoggedIn />
-              </>
-            }
-          </div>
-        )}
-      <br></br>
-      {/* <Link to="/">Back to WelcomePage</Link> */}
-    </div>
+      }
+
+      {loggedIn &&
+        roles.length &&
+        <>
+          <ShowRoles roles={roles} />
+          <LoggedIn />
+        </>
+      }
+    </>
+    // <div>
+    //   {!loggedIn ? (
+    //     <LogIn login={login} message={message} />
+    //   ) : (
+    //       <div>
+    // {roles.length &&
+    //   <>
+    //     <ShowRoles roles={roles} />
+    //     <LoggedIn />
+    //   </>
+    // }
+    //       </div>
+    //     )}
+    // </div>
   );
 };
 
