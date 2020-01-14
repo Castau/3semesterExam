@@ -9,6 +9,7 @@ import dto.MetaCriticDTO;
 import dto.MovieAllDTO;
 import dto.MovieSimpleDTO;
 import dto.RottenTomatoesDTO;
+import entities.MovieCache;
 import entities.Role;
 import entities.User;
 import errorhandling.NotFoundException;
@@ -17,7 +18,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
@@ -30,8 +33,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
+import javax.persistence.TransactionRequiredException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -39,7 +46,7 @@ import org.apache.commons.lang3.tuple.Pair;
  *
  * @author Camilla
  */
-public class ApiFacadeImplementation implements ApiFacadeInterface{
+public class ApiFacadeImplementation implements ApiFacadeInterface {
 
     private ExecutorService executor;
     private final String url = "http://exam-1187.mydemos.dk/";
@@ -67,7 +74,7 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
     public MovieSimpleDTO simpleMovieData(String movieTitle) {
         MovieSimpleDTO movieDTO = new MovieSimpleDTO();
         String[] ENDPOINTS = {"movieInfo/", "moviePoster/"};
-        try { 
+        try {
             Map<String, String> apiData = allApiData(ENDPOINTS, movieTitle);
             JsonObject movieInfoJsonObject = new JsonParser().parse(apiData.get("movieInfo")).getAsJsonObject();
             movieDTO.setTitle(movieInfoJsonObject.get("title").getAsString());
@@ -76,45 +83,85 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
             movieDTO.setGenres(movieInfoJsonObject.get("genres").getAsString());
             movieDTO.setCast(movieInfoJsonObject.get("cast").getAsString());
             movieDTO.setYear(movieInfoJsonObject.get("year").getAsInt());
-            
+
             JsonObject moviePosterJsonObject = new JsonParser().parse(apiData.get("moviePoster")).getAsJsonObject();
             movieDTO.setPoster(moviePosterJsonObject.get("poster").getAsString());
-            
+
         } catch (InterruptedException | ExecutionException | TimeoutException ex) {
             Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }
         return movieDTO;
     }
-    
+
+    private MovieCache isDataInCache(String title) {
+        EntityManager em = getEntityManager();
+        try {
+            List<MovieCache> moviecacheList = em.createNamedQuery("MovieCache.getByTitle", MovieCache.class).setParameter("title", title).getResultList();
+            if (!moviecacheList.isEmpty() && moviecacheList.get(0) != null) {
+                return moviecacheList.get(0);
+            } else {
+                return null;
+            } 
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("Database error");
+        } finally {
+            em.close();
+        }
+    }
+
+    private void saveToCache(MovieAllDTO movieDTO) {
+        MovieCache moviecache = new MovieCache(movieDTO.getTitle(), GSON.toJson(movieDTO), 1, new Date());
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(moviecache);
+            em.getTransaction().commit();
+            
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException e) {
+            em.getTransaction().rollback();
+            throw new IllegalArgumentException("Rollback of transaction saveToCache");
+        } finally {
+            em.close();
+        }
+    }
+
     @Override
     public MovieAllDTO allMovieData(String movieTitle) {
-            MovieAllDTO movieDTO = new MovieAllDTO();
-            MetaCriticDTO metaDTO = new MetaCriticDTO();
-            ImdbDTO imdbDTO = new ImdbDTO();
-            RottenTomatoesDTO tomatoesDTO = new RottenTomatoesDTO();
-            String[] ENDPOINTS = {"movieInfo/", "moviePoster/", "imdbScore/", "tomatoesScore/", "metacriticScore/"};
-           try { 
+        MovieAllDTO movieDTO = new MovieAllDTO();
+        MetaCriticDTO metaDTO = new MetaCriticDTO();
+        ImdbDTO imdbDTO = new ImdbDTO();
+        RottenTomatoesDTO tomatoesDTO = new RottenTomatoesDTO();
+
+        MovieCache moviecache = isDataInCache(movieTitle);
+        if (moviecache != null) {
+            System.out.println("AM IN CACHE IF");
+            return GSON.fromJson(moviecache.getResponse(), MovieAllDTO.class);
+        }
+
+        String[] ENDPOINTS = {"movieInfo/", "moviePoster/", "imdbScore/", "tomatoesScore/", "metacriticScore/"};
+        try {
             Map<String, String> apiData = allApiData(ENDPOINTS, movieTitle);
             JsonObject movieInfoJsonObject = new JsonParser().parse(apiData.get("movieInfo")).getAsJsonObject();
+
             movieDTO.setTitle(movieInfoJsonObject.get("title").getAsString());
             movieDTO.setPlot(movieInfoJsonObject.get("plot").getAsString());
             movieDTO.setDirectors(movieInfoJsonObject.get("directors").getAsString());
             movieDTO.setGenres(movieInfoJsonObject.get("genres").getAsString());
             movieDTO.setCast(movieInfoJsonObject.get("cast").getAsString());
             movieDTO.setYear(movieInfoJsonObject.get("year").getAsInt());
-            
+
             JsonObject moviePosterJsonObject = new JsonParser().parse(apiData.get("moviePoster")).getAsJsonObject();
             movieDTO.setPoster(moviePosterJsonObject.get("poster").getAsString());
-            
+
             JsonObject imdbScoreJsonObject = new JsonParser().parse(apiData.get("imdbScore")).getAsJsonObject();
             imdbDTO.setSource(imdbScoreJsonObject.get("source").getAsString());
             imdbDTO.setRating(imdbScoreJsonObject.get("imdbRating").getAsDouble());
             imdbDTO.setVotes(imdbScoreJsonObject.get("imdbVotes").getAsInt());
-            
+
             JsonObject metacriticScoreJsonObject = new JsonParser().parse(apiData.get("metacriticScore")).getAsJsonObject();
             metaDTO.setSource(metacriticScoreJsonObject.get("source").getAsString());
             metaDTO.setMetacritic(metacriticScoreJsonObject.get("metacritic").getAsInt());
-            
+
             JsonObject tomatoesScoreJsonObject = new JsonParser().parse(apiData.get("tomatoesScore")).getAsJsonObject();
             tomatoesDTO.setCriticMeter(tomatoesScoreJsonObject.get("critic").getAsJsonObject().get("meter").getAsInt());
             tomatoesDTO.setCriticNumReviews(tomatoesScoreJsonObject.get("critic").getAsJsonObject().get("numReviews").getAsInt());
@@ -123,14 +170,16 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
             tomatoesDTO.setViewerMeter(tomatoesScoreJsonObject.get("viewer").getAsJsonObject().get("meter").getAsInt());
             tomatoesDTO.setViewerNumReviews(tomatoesScoreJsonObject.get("viewer").getAsJsonObject().get("numReviews").getAsInt());
             tomatoesDTO.setViewerRating(tomatoesScoreJsonObject.get("viewer").getAsJsonObject().get("rating").getAsDouble());
-            
+
             movieDTO.setImdb(imdbDTO);
             movieDTO.setMetaCritic(metaDTO);
             movieDTO.setTomatoes(tomatoesDTO);
-            
+
         } catch (InterruptedException | ExecutionException | TimeoutException ex) {
-            Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IllegalArgumentException("Json mapping in allMovieData went wrong");
         }
+        saveToCache(movieDTO);
+        System.out.println("MADE IT TO RETURN");
         return movieDTO;
     }
 
