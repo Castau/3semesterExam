@@ -13,8 +13,10 @@ import entities.Role;
 import entities.User;
 import errorhandling.NotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -41,7 +43,6 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
 
     private ExecutorService executor;
     private final String url = "http://exam-1187.mydemos.dk/";
-    private final String[] ENDPOINTS = {"movieInfo/", "moviePoster/", "imdbScore/", "tomatoesScore/", "metacriticScore/"};
     private final Gson GSON = new Gson();
 
     private static ApiFacadeImplementation facade;
@@ -65,9 +66,9 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
     @Override
     public MovieSimpleDTO simpleMovieData(String movieTitle) {
         MovieSimpleDTO movieDTO = new MovieSimpleDTO();
-        
+        String[] ENDPOINTS = {"movieInfo/", "moviePoster/"};
         try { 
-            Map<String, String> apiData = allApiData(movieTitle);
+            Map<String, String> apiData = allApiData(ENDPOINTS, movieTitle);
             JsonObject movieInfoJsonObject = new JsonParser().parse(apiData.get("movieInfo")).getAsJsonObject();
             movieDTO.setTitle(movieInfoJsonObject.get("title").getAsString());
             movieDTO.setPlot(movieInfoJsonObject.get("plot").getAsString());
@@ -91,9 +92,9 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
             MetaCriticDTO metaDTO = new MetaCriticDTO();
             ImdbDTO imdbDTO = new ImdbDTO();
             RottenTomatoesDTO tomatoesDTO = new RottenTomatoesDTO();
-            
+            String[] ENDPOINTS = {"movieInfo/", "moviePoster/", "imdbScore/", "tomatoesScore/", "metacriticScore/"};
            try { 
-            Map<String, String> apiData = allApiData(movieTitle);
+            Map<String, String> apiData = allApiData(ENDPOINTS, movieTitle);
             JsonObject movieInfoJsonObject = new JsonParser().parse(apiData.get("movieInfo")).getAsJsonObject();
             movieDTO.setTitle(movieInfoJsonObject.get("title").getAsString());
             movieDTO.setPlot(movieInfoJsonObject.get("plot").getAsString());
@@ -133,9 +134,7 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
         return movieDTO;
     }
 
-    private Map<String, String> allApiData(String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {
-    //public String allApiData(String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {    
-        //String result = "";
+    private Map<String, String> allApiData(String[] ENDPOINTS, String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {
         executor = Executors.newCachedThreadPool();
         Map<String, String> movieMap = new HashMap();
         Queue<Future<Pair<String, String>>> queue = new ArrayBlockingQueue(ENDPOINTS.length);
@@ -144,7 +143,7 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
             Future<Pair<String, String>> future = executor.submit(new Callable<Pair<String, String>>() {
                 @Override
                 public Pair<String, String> call() throws Exception {
-                    return new ImmutablePair(endpoint.substring(0, endpoint.length() - 1), getApiData(url + endpoint + movieTitle));
+                    return new ImmutablePair(endpoint.substring(0, endpoint.length() - 1), getApiData(url + endpoint + movieTitle.replace(" ", "%20")));
                 }
             });
             queue.add(future);
@@ -153,7 +152,6 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
         while (!queue.isEmpty()) {
             Future<Pair<String, String>> epPair = queue.poll();
             if (epPair.isDone()) {
-                //result = result + "," + epPair.get().getValue();
                 movieMap.put(epPair.get().getKey(), epPair.get().getValue());
             } else {
                 queue.add(epPair);
@@ -161,7 +159,6 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
         }
         executor.shutdown();
         return movieMap;
-        //return result;
     }
 
     private String getApiData(String url) throws NotFoundException {
@@ -176,8 +173,6 @@ public class ApiFacadeImplementation implements ApiFacadeInterface{
                 while (scan.hasNext()) {
                     response += scan.nextLine();
                 }
-                Gson gson = new Gson();
-                //return gson.fromJson(response, JsonObject.class);
                 return GSON.fromJson(response, JsonObject.class).toString();
             }
         } catch (JsonSyntaxException | IOException e) {
