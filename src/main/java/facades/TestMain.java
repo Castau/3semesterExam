@@ -20,17 +20,23 @@ import utils.EMF_Creator;
  *
  * @author Camilla
  */
-public class TODELETEmainTest {
+public class TestMain {
 
     public static void main(String[] args) throws Exception {
         EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
         ApiFacadeImplementation facade = ApiFacadeImplementation.getApiFacade(EMF);
         Gson gson = new Gson();
-        String map = facade.allApiData("Die%20Hard");
-        String map1 = facade.allApiData("Grease");
+//        String map = facade.allApiData("Die%20Hard");
+//        String map1 = facade.allApiData("Grease");
         //MovieAllDTO movie = facade.allMovieData("Die%20Hard");
-        System.out.println(gson.toJson(map));
-        System.out.println(gson.toJson(map1));
+        
+        Map<String, String> map = facade.allApiData("Die%20Hard");
+        Map<String, String> map1 = facade.allApiData("Grease");
+        
+        System.out.println(gson.toJson(map.get("movieInfo")));
+        System.out.println(gson.toJson(map1.get("movieInfo")));
+//        System.out.println(gson.toJson(map));
+//        System.out.println(gson.toJson(map1));
 
     }
 }

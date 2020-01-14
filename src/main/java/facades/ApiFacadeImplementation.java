@@ -37,7 +37,7 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class ApiFacadeImplementation {
 
-    private ExecutorService executor = Executors.newCachedThreadPool();
+    private ExecutorService executor;
     private String url = "http://exam-1187.mydemos.dk/";
     private String[] ENDPOINTS = {"movieInfo/", "moviePoster/", "imdbScore/", "tomatoesScore/", "metacriticScore/"};
 
@@ -76,15 +76,23 @@ public class ApiFacadeImplementation {
             ImdbDTO imdbDTO = new ImdbDTO();
             RottenTomatoesDTO tomatoesDTO = new RottenTomatoesDTO();
            try { 
-            String apiData = allApiData(movieTitle);
-            JsonObject apiDataJsonObject = new JsonParser().parse(apiData).getAsJsonObject();
-            movieDTO.setTitle(apiDataJsonObject.get("title").getAsString());
-            movieDTO.setPlot(apiDataJsonObject.get("plot").getAsString());
-            movieDTO.setDirectors(apiDataJsonObject.get("directors").getAsString());
-            movieDTO.setGenres(apiDataJsonObject.get("genres").getAsString());
-            movieDTO.setCast(apiDataJsonObject.get("cast").getAsString());
-            movieDTO.setYear(apiDataJsonObject.get("year").getAsInt());
-            movieDTO.setPoster(apiDataJsonObject.get("poster").getAsString());
+            Map<String, String> apiData = allApiData(movieTitle);
+            // {"movieInfo/", "moviePoster/", "imdbScore/", "tomatoesScore/", "metacriticScore/"};
+            //String movieInfo = apiData.get("movieInfo");
+            JsonObject movieInfoJsonObject = new JsonParser().parse(apiData.get("movieInfo")).getAsJsonObject();
+            movieDTO.setTitle(movieInfoJsonObject.get("title").getAsString());
+            movieDTO.setPlot(movieInfoJsonObject.get("plot").getAsString());
+            movieDTO.setDirectors(movieInfoJsonObject.get("directors").getAsString());
+            movieDTO.setGenres(movieInfoJsonObject.get("genres").getAsString());
+            movieDTO.setCast(movieInfoJsonObject.get("cast").getAsString());
+            movieDTO.setYear(movieInfoJsonObject.get("year").getAsInt());
+            
+            JsonObject moviePosterJsonObject = new JsonParser().parse(apiData.get("moviePoster")).getAsJsonObject();
+            movieDTO.setPoster(moviePosterJsonObject.get("poster").getAsString());
+            
+            JsonObject imdbScoreJsonObject = new JsonParser().parse(apiData.get("imdbScore")).getAsJsonObject();
+            JsonObject tomatoesScoreJsonObject = new JsonParser().parse(apiData.get("tomatoesScore")).getAsJsonObject();
+            JsonObject metacriticScoreJsonObject = new JsonParser().parse(apiData.get("metacriticScore")).getAsJsonObject();
             
             
         } catch (InterruptedException ex) {
@@ -97,10 +105,11 @@ public class ApiFacadeImplementation {
         return movieDTO;
     }
 
-    //public Map<String, String> allApiData(String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {
-    public String allApiData(String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {    
-        String result = "";
-        //Map<String, String> movieMap = new HashMap();
+    public Map<String, String> allApiData(String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {
+    //public String allApiData(String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {    
+        //String result = "";
+        executor = Executors.newCachedThreadPool();
+        Map<String, String> movieMap = new HashMap();
         Queue<Future<Pair<String, String>>> queue = new ArrayBlockingQueue(ENDPOINTS.length);
 
         for (String endpoint : ENDPOINTS) {
@@ -116,15 +125,15 @@ public class ApiFacadeImplementation {
         while (!queue.isEmpty()) {
             Future<Pair<String, String>> epPair = queue.poll();
             if (epPair.isDone()) {
-                result = result + "," + epPair.get().getValue();
-                //movieMap.put(epPair.get().getKey(), epPair.get().getValue());
+                //result = result + "," + epPair.get().getValue();
+                movieMap.put(epPair.get().getKey(), epPair.get().getValue());
             } else {
                 queue.add(epPair);
             }
         }
-        //executor.shutdown();
-        //return movieMap;
-        return result;
+        executor.shutdown();
+        return movieMap;
+        //return result;
     }
 
     private String getApiData(String url) {
@@ -136,7 +145,7 @@ public class ApiFacadeImplementation {
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json;charset=UTF-8");
             connection.setRequestProperty("user-agent", "Application");
-            try (Scanner scan = new Scanner(connection.getInputStream())) {
+            try (Scanner scan = new Scanner(connection.getInputStream(), "UTF-8")) {
                 String response = "";
                 while (scan.hasNext()) {
                     response += scan.nextLine();
