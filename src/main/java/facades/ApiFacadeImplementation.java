@@ -84,7 +84,7 @@ public class ApiFacadeImplementation implements ApiFacadeInterface {
             movieDTO.setPoster(moviePosterJsonObject.get("poster").getAsString());
 
         } catch (InterruptedException | ExecutionException | TimeoutException ex) {
-            Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IllegalArgumentException("Json mapping in simpleMovieData went wrong");
         }
         return movieDTO;
     }

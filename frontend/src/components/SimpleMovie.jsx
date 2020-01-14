@@ -11,21 +11,29 @@ const SimpleMovie = () => {
     setTitle(evt.target.value);
   };
 
+  const reset = () => {
+    setTitle('');
+    setMovieInfo('');
+  }
+
   const onClick = () => {
     facade
       .fetchGetData('movieInfoSimple', title)
       .then(res => {
         setMovieInfo(res);
         setmovieErrorMessage('');
+        setTitle('');
       })
       .catch(err => {
         if (err.status) {
           err.fullError.then(e => {
             setmovieErrorMessage(e.message);
+            reset();
             console.log(e.code, e.message);
           });
         } else {
           console.log('Network error');
+          reset();
         }
       });
   };
@@ -34,7 +42,7 @@ const SimpleMovie = () => {
     <>
       <h2 className="mt-5 "><Badge variant="info">Simple Movie Data</Badge></h2>
       <h4> <Badge variant="danger">{movieErrorMessage}</Badge></h4>
-      <input placeholder="Movie Title" id="title" type="text" onChange={onChange} />
+      <input placeholder="Movie Title" value={title} id="title" type="text" onChange={onChange} />
       <button className="btn-dark mb-3" onClick={onClick}>Movie Info</button>
       {movieInfo &&
         <Card className="p-3">
@@ -44,7 +52,10 @@ const SimpleMovie = () => {
           <p>Directors: {movieInfo.directors}</p>
           <p>Actors: {movieInfo.cast}</p>
           <p>Resumé: {movieInfo.plot}</p>
-          {movieInfo && <img src={movieInfo.poster}></img>}
+          {movieInfo &&
+            <center>
+              <img className="imgscale" src={movieInfo.poster}></img>
+            </center>}
         </Card>}
     </>
   );

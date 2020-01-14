@@ -17,18 +17,21 @@ const Admin = ({ loggedIn, roles }) => {
       .then(res => {
         setCountInfo(res);
         setmovieErrorMessage('');
+        setTitle('');
       })
       .catch(err => {
         console.log(err);
         if (err.status) {
           err.fullError.then(e => {
             setmovieErrorMessage(e.message);
+            setTitle('');
             console.log(e.code, e.message);
             setCountInfo('');
           });
         } else {
           console.log('Network error');
           setCountInfo('');
+          setTitle('');
         }
       });
   };
@@ -44,7 +47,7 @@ const Admin = ({ loggedIn, roles }) => {
       <>
         <h4 className="mt-5 mb-3"> <Badge variant="info">Check amount of requests for specific movie</Badge></h4>
         <h4> <Badge variant="danger">{movieErrorMessage}</Badge></h4>
-        <input placeholder="Movie Title" id="title" type="text" onChange={onChange} />
+        <input placeholder="Movie Title" value={title} id="title" type="text" onChange={onChange} />
         <button className="btn-dark mb-3" onClick={onClick}>Check movie requests</button>
 
         {countInfo &&

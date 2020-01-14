@@ -24,3 +24,8 @@
 .block{
   display: block;
 }
+
+.imgscale{
+  height: 100%;
+  width: fit-content;
+}
