@@ -3,6 +3,7 @@ package rest;
 import dto.MovieAllDTO;
 import dto.MovieCountDTO;
 import dto.MovieSimpleDTO;
+import errorhandling.NotFoundException;
 import facades.ApiFacadeImplementation;
 import facades.ApiFacadeInterface;
 import javax.annotation.security.RolesAllowed;
@@ -57,7 +58,7 @@ public class ApiResource {
     @Path("movieCount/{title}")
     @RolesAllowed({"admin"})
     @Produces({MediaType.APPLICATION_JSON})
-    public MovieCountDTO adminMovieCount(@PathParam("title") String title) {
+    public MovieCountDTO adminMovieCount(@PathParam("title") String title) throws NotFoundException {
         return facade.getMovieCount(title);
     }
     
