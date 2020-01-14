@@ -1,18 +1,17 @@
 package rest;
 
-import com.google.gson.Gson;
-import entities.User;
+import dto.MovieAllDTO;
+import dto.MovieSimpleDTO;
 import facades.ApiFacadeImplementation;
-import java.util.List;
-import java.util.Map;
+import facades.ApiFacadeInterface;
 import javax.annotation.security.RolesAllowed;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
@@ -24,7 +23,7 @@ import utils.EMF_Creator;
 public class ApiResource {
 
     private static EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
-    private ApiFacadeImplementation facade = ApiFacadeImplementation.getApiFacade(EMF);
+    private ApiFacadeInterface facade = ApiFacadeImplementation.getApiFacade(EMF);
 
     @Context
     private UriInfo context;
@@ -34,22 +33,23 @@ public class ApiResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getInfoForAll() {
-        return "{\"msg\":\"Hello anonymous\"}";
+    public String helloWorld() {
+        return "{\"msg\":\"Hello World\"}";
     }
 
-
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("all")
-    public String allUsers() {
-        EntityManager em = EMF.createEntityManager();
-        try {
-            List<User> users = em.createQuery("select user from User user").getResultList();
-            return "[" + users.size() + "]";
-        } finally {
-            em.close();
-        }
+    @Path("movieInfoSimple/{title}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public MovieSimpleDTO simpleMovieData(@PathParam("title") String title) {
+        return facade.simpleMovieData(title);
+    }
+    
+    @GET
+    @Path("movieInfoAll/{title}")
+    @RolesAllowed({"admin", "user"})
+    @Produces({MediaType.APPLICATION_JSON})
+    public MovieAllDTO allMovieData(@PathParam("title") String title) {
+        return facade.allMovieData(title);
     }
 
     @GET
