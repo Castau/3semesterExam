@@ -1,5 +1,7 @@
 package dto;
 
+import java.util.Objects;
+
 /**
  *
  * @author Camilla
@@ -81,6 +83,55 @@ public class RottenTomatoesDTO {
     @Override
     public String toString() {
         return "RottenTomatoesDTO{" + "source=" + source + ", viewerRating=" + viewerRating + ", criticRating=" + criticRating + ", viewerNumReviews=" + viewerNumReviews + ", viewerMeter=" + viewerMeter + ", criticNumReviews=" + criticNumReviews + ", criticMeter=" + criticMeter + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 83 * hash + Objects.hashCode(this.source);
+        hash = 83 * hash + (int) (Double.doubleToLongBits(this.viewerRating) ^ (Double.doubleToLongBits(this.viewerRating) >>> 32));
+        hash = 83 * hash + (int) (Double.doubleToLongBits(this.criticRating) ^ (Double.doubleToLongBits(this.criticRating) >>> 32));
+        hash = 83 * hash + this.viewerNumReviews;
+        hash = 83 * hash + this.viewerMeter;
+        hash = 83 * hash + this.criticNumReviews;
+        hash = 83 * hash + this.criticMeter;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RottenTomatoesDTO other = (RottenTomatoesDTO) obj;
+        if (Double.doubleToLongBits(this.viewerRating) != Double.doubleToLongBits(other.viewerRating)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.criticRating) != Double.doubleToLongBits(other.criticRating)) {
+            return false;
+        }
+        if (this.viewerNumReviews != other.viewerNumReviews) {
+            return false;
+        }
+        if (this.viewerMeter != other.viewerMeter) {
+            return false;
+        }
+        if (this.criticNumReviews != other.criticNumReviews) {
+            return false;
+        }
+        if (this.criticMeter != other.criticMeter) {
+            return false;
+        }
+        if (!Objects.equals(this.source, other.source)) {
+            return false;
+        }
+        return true;
     }
 
     

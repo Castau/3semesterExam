@@ -1,5 +1,7 @@
 package dto;
 
+import java.util.Objects;
+
 /**
  *
  * @author Camilla
@@ -35,6 +37,35 @@ public class MovieCountDTO {
     @Override
     public String toString() {
         return "MovieCountDTO{" + "title=" + title + ", count=" + count + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 41 * hash + Objects.hashCode(this.title);
+        hash = 41 * hash + this.count;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MovieCountDTO other = (MovieCountDTO) obj;
+        if (this.count != other.count) {
+            return false;
+        }
+        if (!Objects.equals(this.title, other.title)) {
+            return false;
+        }
+        return true;
     }
     
     

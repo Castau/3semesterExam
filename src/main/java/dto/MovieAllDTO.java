@@ -1,6 +1,8 @@
 
 package dto;
 
+import java.util.Objects;
+
 /**
  *
  * @author Camilla
@@ -112,6 +114,67 @@ public class MovieAllDTO {
     @Override
     public String toString() {
         return "MovieAllDTO{" + "title=" + title + ", plot=" + plot + ", directors=" + directors + ", genres=" + genres + ", cast=" + cast + ", year=" + year + ", poster=" + poster + ", imdb=" + imdb + ", tomatoes=" + tomatoes + ", metaCritic=" + metaCritic + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 71 * hash + Objects.hashCode(this.title);
+        hash = 71 * hash + Objects.hashCode(this.plot);
+        hash = 71 * hash + Objects.hashCode(this.directors);
+        hash = 71 * hash + Objects.hashCode(this.genres);
+        hash = 71 * hash + Objects.hashCode(this.cast);
+        hash = 71 * hash + this.year;
+        hash = 71 * hash + Objects.hashCode(this.poster);
+        hash = 71 * hash + Objects.hashCode(this.imdb);
+        hash = 71 * hash + Objects.hashCode(this.tomatoes);
+        hash = 71 * hash + Objects.hashCode(this.metaCritic);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MovieAllDTO other = (MovieAllDTO) obj;
+        if (this.year != other.year) {
+            return false;
+        }
+        if (!Objects.equals(this.title, other.title)) {
+            return false;
+        }
+        if (!Objects.equals(this.plot, other.plot)) {
+            return false;
+        }
+        if (!Objects.equals(this.directors, other.directors)) {
+            return false;
+        }
+        if (!Objects.equals(this.genres, other.genres)) {
+            return false;
+        }
+        if (!Objects.equals(this.cast, other.cast)) {
+            return false;
+        }
+        if (!Objects.equals(this.poster, other.poster)) {
+            return false;
+        }
+        if (!Objects.equals(this.imdb, other.imdb)) {
+            return false;
+        }
+        if (!Objects.equals(this.tomatoes, other.tomatoes)) {
+            return false;
+        }
+        if (!Objects.equals(this.metaCritic, other.metaCritic)) {
+            return false;
+        }
+        return true;
     }
     
 }

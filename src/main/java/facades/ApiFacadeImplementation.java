@@ -159,6 +159,8 @@ public class ApiFacadeImplementation implements ApiFacadeInterface {
         MovieCache moviecache = isDataInCache(movieTitle);
         if (moviecache != null) {
             System.out.println("AM IN CACHE IF");
+            System.out.println("GET RESPONSE");
+            System.out.println(moviecache.getResponse());
             return GSON.fromJson(moviecache.getResponse(), MovieAllDTO.class);
         }
 
@@ -196,6 +198,8 @@ public class ApiFacadeImplementation implements ApiFacadeInterface {
             tomatoesDTO.setViewerRating(tomatoesScoreJsonObject.get("viewer").getAsJsonObject().get("rating").getAsDouble());
 
             movieDTO.setImdb(imdbDTO);
+            System.out.println("IMDB");
+            System.out.println(imdbDTO);
             movieDTO.setMetaCritic(metaDTO);
             movieDTO.setTomatoes(tomatoesDTO);
 

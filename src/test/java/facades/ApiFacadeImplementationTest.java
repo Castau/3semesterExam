@@ -12,6 +12,7 @@ import dto.MovieCountDTO;
 import dto.MovieSimpleDTO;
 import dto.RottenTomatoesDTO;
 import entities.MovieCache;
+import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.AfterEach;
@@ -27,11 +28,12 @@ import utils.EMF_Creator;
  *
  * @author Camilla
  */
-@Disabled
+//@Disabled
 public class ApiFacadeImplementationTest {
+
     private static EntityManagerFactory emf;
     private static ApiFacadeImplementation facade;
-    
+
     private static ImdbDTO imdb;
     private static MetaCriticDTO meta;
     private static MovieAllDTO all;
@@ -39,30 +41,28 @@ public class ApiFacadeImplementationTest {
     private static MovieSimpleDTO simple;
     private static RottenTomatoesDTO rotten;
     private static MovieCache cache;
-    
+
     public ApiFacadeImplementationTest() {
     }
-    
+
     @BeforeAll
     public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.TEST, EMF_Creator.Strategy.DROP_AND_CREATE);
         facade = ApiFacadeImplementation.getApiFacade(emf);
-        
+
+        cache = new MovieCache("Alien", "{\"cast\":\"Tom Skerritt,Sigourney Weaver,Veronica Cartwright,Harry Dean Stanton\",\"directors\":\"Ridley Scott\",\"genres\":\"Horror,Sci-Fi\",\"imdb\":{\"rating\":8.5,\"source\":\"imdb\",\"votes\":502112},\"metaCritic\":{\"metacritic\":83,\"source\":\"metacritic\"},\"plot\":\"The commercial vessel Nostromo receives a distress call from an unexplored planet. After searching for survivors, the crew heads home only to realize that a deadly bioform has joined them.\",\"poster\":\"https://m.media-amazon.com/images/M/MV5BMmQ2MmU3NzktZjAxOC00ZDZhLTk4YzEtMDMyMzcxY2IwMDAyXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SY1000_SX677_AL_.jpg\",\"title\":\"Alien\",\"tomatoes\":{\"criticMeter\":97,\"criticNumReviews\":100,\"criticRating\":9.0,\"source\":\"tomatoes\",\"viewerMeter\":94,\"viewerNumReviews\":453306,\"viewerRating\":3.9},\"year\":1979}", 1, new Date());
         simple = new MovieSimpleDTO("Alien", "The commercial vessel Nostromo receives a distress call from an unexplored planet. After searching for survivors, the crew heads home only to realize that a deadly bioform has joined them.", "Ridley Scott", "Horror,Sci-Fi", "Tom Skerritt,Sigourney Weaver,Veronica Cartwright,Harry Dean Stanton", 1979, "https://m.media-amazon.com/images/M/MV5BMmQ2MmU3NzktZjAxOC00ZDZhLTk4YzEtMDMyMzcxY2IwMDAyXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SY1000_SX677_AL_.jpg");
-        
-        
-        // MovieCountDTO(String title, int count)
-        // MovieCache(String title, String response, int count, Date CachedDate)
-        // RottenTomatoesDTO(String source, double viewerRating, double criticRating, int viewerNumReviews, int viewerMeter, int criticNumReviews, int criticMeter)
-        // MetaCriticDTO(String Msource, int metacritic)
-        // ImdbDTO(String Source, double Rating, int Votes)
-        // MovieAllDTO(String title, String plot, String directors, String genres, String cast, int year, String poster, ImdbDTO imdb, RottenTomatoesDTO tomatoes, MetaCriticDTO metaCritic)
+        rotten = new RottenTomatoesDTO("tomatoes", 3.9, 9, 453306, 94, 100, 97);
+        meta = new MetaCriticDTO("metacritic", 83);
+        imdb = new ImdbDTO("imdb", 8.5, 502112);
+        all = new MovieAllDTO("Alien", "The commercial vessel Nostromo receives a distress call from an unexplored planet. After searching for survivors, the crew heads home only to realize that a deadly bioform has joined them.", "Ridley Scott", "Horror,Sci-Fi", "Tom Skerritt,Sigourney Weaver,Veronica Cartwright,Harry Dean Stanton", 1979, "https://m.media-amazon.com/images/M/MV5BMmQ2MmU3NzktZjAxOC00ZDZhLTk4YzEtMDMyMzcxY2IwMDAyXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SY1000_SX677_AL_.jpg", imdb, rotten, meta);
+        count = new MovieCountDTO("Alien", 1);
     }
-    
+
     @AfterAll
     public static void tearDownClass() {
     }
-    
+
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
@@ -70,14 +70,13 @@ public class ApiFacadeImplementationTest {
         em.persist(cache);
         em.getTransaction().commit();
     }
-    
-     @AfterEach
+
+    @AfterEach
     public void tearDown() {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("User.deleteAllRows").executeUpdate();
-            em.createNamedQuery("Role.deleteAllRows").executeUpdate();
+            em.createNamedQuery("MovieCache.deleteAllRows").executeUpdate();
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();
@@ -87,64 +86,26 @@ public class ApiFacadeImplementationTest {
         }
     }
 
-
-    /**
-     * Test of simpleMovieData method, of class ApiFacadeImplementation.
-     */
     @Test
     public void testSimpleMovieData() {
-        System.out.println("simpleMovieData");
-        String movieTitle = "";
-        ApiFacadeImplementation instance = null;
-        MovieSimpleDTO expResult = null;
-        MovieSimpleDTO result = instance.simpleMovieData(movieTitle);
+        MovieSimpleDTO expResult = simple;
+        MovieSimpleDTO result = facade.simpleMovieData("Alien");
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of getMovieCount method, of class ApiFacadeImplementation.
-     */
     @Test
     public void testGetMovieCount() throws Exception {
-        System.out.println("getMovieCount");
-        String title = "";
-        ApiFacadeImplementation instance = null;
-        MovieCountDTO expResult = null;
-        MovieCountDTO result = instance.getMovieCount(title);
+        MovieCountDTO expResult = count;
+        MovieCountDTO result = facade.getMovieCount("Alien");
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of allMovieData method, of class ApiFacadeImplementation.
-     */
     @Test
     public void testAllMovieData() {
-        System.out.println("allMovieData");
-        String movieTitle = "";
-        ApiFacadeImplementation instance = null;
-        MovieAllDTO expResult = null;
-        MovieAllDTO result = instance.allMovieData(movieTitle);
+        MovieAllDTO expResult = all;
+        MovieAllDTO result = facade.allMovieData("Alien");
+        System.out.println(result);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of testData method, of class ApiFacadeImplementation.
-     */
-    @Test
-    public void testTestData() {
-        System.out.println("testData");
-        ApiFacadeImplementation instance = null;
-        boolean expResult = false;
-        boolean result = instance.testData();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
 }
