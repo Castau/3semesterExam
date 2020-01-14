@@ -24,9 +24,11 @@ const Admin = ({ loggedIn, roles }) => {
           err.fullError.then(e => {
             setmovieErrorMessage(e.message);
             console.log(e.code, e.message);
+            setCountInfo('');
           });
         } else {
           console.log('Network error');
+          setCountInfo('');
         }
       });
   };
