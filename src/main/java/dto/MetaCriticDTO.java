@@ -34,7 +34,7 @@ public class MetaCriticDTO {
 
     @Override
     public String toString() {
-        return "MetaCriticDTO{" + "Msource=" + source + ", metacritic=" + metacritic + '}';
+        return "MetaCriticDTO{" + "source=" + source + ", metacritic=" + metacritic + '}';
     }
     
     

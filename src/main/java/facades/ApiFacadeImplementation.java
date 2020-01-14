@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import dto.ImdbDTO;
 import dto.MetaCriticDTO;
 import dto.MovieAllDTO;
+import dto.MovieSimpleDTO;
 import dto.RottenTomatoesDTO;
 import entities.Role;
 import entities.User;
@@ -59,26 +60,40 @@ public class ApiFacadeImplementation {
         return emf.createEntityManager();
     }
 
-//        this.title = title;
-//        this.plot = plot;
-//        this.directors = directors;
-//        this.genres = genres;
-//        this.cast = cast;
-//        this.year = year;
-//        this.poster = poster;
-//        this.imdb = imdb;
-//        this.tomatoes = tomatoes;
-//        this.metaCritic = metaCritic;
+    public MovieSimpleDTO simpleMovieData(String movieTitle) {
+        MovieSimpleDTO movieDTO = new MovieSimpleDTO();
+        
+        try { 
+            Map<String, String> apiData = allApiData(movieTitle);
+            JsonObject movieInfoJsonObject = new JsonParser().parse(apiData.get("movieInfo")).getAsJsonObject();
+            movieDTO.setTitle(movieInfoJsonObject.get("title").getAsString());
+            movieDTO.setPlot(movieInfoJsonObject.get("plot").getAsString());
+            movieDTO.setDirectors(movieInfoJsonObject.get("directors").getAsString());
+            movieDTO.setGenres(movieInfoJsonObject.get("genres").getAsString());
+            movieDTO.setCast(movieInfoJsonObject.get("cast").getAsString());
+            movieDTO.setYear(movieInfoJsonObject.get("year").getAsInt());
+            
+            JsonObject moviePosterJsonObject = new JsonParser().parse(apiData.get("moviePoster")).getAsJsonObject();
+            movieDTO.setPoster(moviePosterJsonObject.get("poster").getAsString());
+            
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TimeoutException ex) {
+            Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return movieDTO;
+    }
     
     public MovieAllDTO allMovieData(String movieTitle) {
             MovieAllDTO movieDTO = new MovieAllDTO();
             MetaCriticDTO metaDTO = new MetaCriticDTO();
             ImdbDTO imdbDTO = new ImdbDTO();
             RottenTomatoesDTO tomatoesDTO = new RottenTomatoesDTO();
+            
            try { 
             Map<String, String> apiData = allApiData(movieTitle);
-            // {"movieInfo/", "moviePoster/", "imdbScore/", "tomatoesScore/", "metacriticScore/"};
-            //String movieInfo = apiData.get("movieInfo");
             JsonObject movieInfoJsonObject = new JsonParser().parse(apiData.get("movieInfo")).getAsJsonObject();
             movieDTO.setTitle(movieInfoJsonObject.get("title").getAsString());
             movieDTO.setPlot(movieInfoJsonObject.get("plot").getAsString());
@@ -91,9 +106,26 @@ public class ApiFacadeImplementation {
             movieDTO.setPoster(moviePosterJsonObject.get("poster").getAsString());
             
             JsonObject imdbScoreJsonObject = new JsonParser().parse(apiData.get("imdbScore")).getAsJsonObject();
-            JsonObject tomatoesScoreJsonObject = new JsonParser().parse(apiData.get("tomatoesScore")).getAsJsonObject();
-            JsonObject metacriticScoreJsonObject = new JsonParser().parse(apiData.get("metacriticScore")).getAsJsonObject();
+            imdbDTO.setSource(imdbScoreJsonObject.get("source").getAsString());
+            imdbDTO.setRating(imdbScoreJsonObject.get("imdbRating").getAsDouble());
+            imdbDTO.setVotes(imdbScoreJsonObject.get("imdbVotes").getAsInt());
             
+            JsonObject metacriticScoreJsonObject = new JsonParser().parse(apiData.get("metacriticScore")).getAsJsonObject();
+            metaDTO.setSource(metacriticScoreJsonObject.get("source").getAsString());
+            metaDTO.setMetacritic(metacriticScoreJsonObject.get("metacritic").getAsInt());
+            
+            JsonObject tomatoesScoreJsonObject = new JsonParser().parse(apiData.get("tomatoesScore")).getAsJsonObject();
+            tomatoesDTO.setCriticMeter(tomatoesScoreJsonObject.get("critic").getAsJsonObject().get("meter").getAsInt());
+            tomatoesDTO.setCriticNumReviews(tomatoesScoreJsonObject.get("critic").getAsJsonObject().get("numReviews").getAsInt());
+            tomatoesDTO.setCriticRating(tomatoesScoreJsonObject.get("critic").getAsJsonObject().get("rating").getAsDouble());
+            tomatoesDTO.setSource(tomatoesScoreJsonObject.get("source").getAsString());
+            tomatoesDTO.setViewerMeter(tomatoesScoreJsonObject.get("viewer").getAsJsonObject().get("meter").getAsInt());
+            tomatoesDTO.setViewerNumReviews(tomatoesScoreJsonObject.get("viewer").getAsJsonObject().get("numReviews").getAsInt());
+            tomatoesDTO.setViewerRating(tomatoesScoreJsonObject.get("viewer").getAsJsonObject().get("rating").getAsDouble());
+            
+            movieDTO.setImdb(imdbDTO);
+            movieDTO.setMetaCritic(metaDTO);
+            movieDTO.setTomatoes(tomatoesDTO);
             
         } catch (InterruptedException ex) {
             Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
