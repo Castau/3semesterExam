@@ -31,8 +31,8 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class ApiFacadeImplementation {
     private ExecutorService executor = Executors.newCachedThreadPool();
-    private String url = "https://swapi.co/api/";
-    private String[] ENDPOINTS = {"people/", "planets/", "starships/", "vehicles/", "species/"};
+    private String url = "http://exam-1187.mydemos.dk/";
+    private String[] ENDPOINTS = {"movieInfo/", "moviePoster/", "imdbScore/", "tomatoesScore/", "metacriticScore/"};
 
     private static ApiFacadeImplementation facade;
     private static EntityManagerFactory emf;
@@ -54,15 +54,15 @@ public class ApiFacadeImplementation {
     
     
 
-    public Map<String, String> allApiData() throws InterruptedException, ExecutionException, TimeoutException {
-        Map<String, String> result = new HashMap();
+    public Map<String, String> allApiData(String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {
+        Map<String, String> movieMap = new HashMap();
         Queue<Future<Pair<String, String>>> queue = new ArrayBlockingQueue(ENDPOINTS.length);
 
         for (String endpoint : ENDPOINTS) {
             Future<Pair<String, String>> future = executor.submit(new Callable<Pair<String, String>>() {
                 @Override
                 public Pair<String, String> call() throws Exception {
-                    return new ImmutablePair(endpoint.substring(0, endpoint.length()-1), getApiData(url + endpoint));
+                    return new ImmutablePair(endpoint.substring(0, endpoint.length()-1), getApiData(url + endpoint + movieTitle));
                 }
             });
             queue.add(future);
@@ -71,16 +71,17 @@ public class ApiFacadeImplementation {
         while (!queue.isEmpty()) {
             Future<Pair<String, String>> epPair = queue.poll();
             if (epPair.isDone()) {
-                result.put(epPair.get().getKey(), epPair.get().getValue());
+                movieMap.put(epPair.get().getKey(), epPair.get().getValue());
             } else {
                 queue.add(epPair);
             }
         }
         executor.shutdown();
-        return result;
+        return movieMap;
     }
 
     private String getApiData(String url) {
+        System.out.println("URL " + url);
         String result = "";
         try {
             URL siteURL = new URL(url);
@@ -101,6 +102,13 @@ public class ApiFacadeImplementation {
         }
         return result;
     }
+    
+    
+    
+    
+    
+    
+    
     
     public boolean testData() {
         EntityManager em = getEntityManager();
