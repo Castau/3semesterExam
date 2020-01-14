@@ -59,10 +59,6 @@ public class ApiFacadeImplementationTest {
         count = new MovieCountDTO("Alien", 1);
     }
 
-    @AfterAll
-    public static void tearDownClass() {
-    }
-
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();

@@ -63,6 +63,20 @@ public class ApiResource {
     }
     
     @GET
+    @Path("testdata")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String populateDatabase() {
+
+        boolean success = facade.testData();
+
+        if (success) {
+            return "{\"message\":\"Database populated with dummy data\"}";
+        } else {
+            return "{\"message\":\"Failed to populate database\"}";
+        }
+    }
+    
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("user")
     @RolesAllowed("user")
@@ -80,18 +94,4 @@ public class ApiResource {
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";
     }
 
-
-    @GET
-    @Path("testdata")
-    @Produces({MediaType.APPLICATION_JSON})
-    public String populateDatabase() {
-
-        boolean success = facade.testData();
-
-        if (success) {
-            return "{\"message\":\"Database populated with dummy data\"}";
-        } else {
-            return "{\"message\":\"Failed to populate database\"}";
-        }
-    }
 }
