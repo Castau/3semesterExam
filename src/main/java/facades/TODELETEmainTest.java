@@ -6,6 +6,7 @@
 package facades;
 
 import com.google.gson.Gson;
+import dto.MovieAllDTO;
 import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import utils.EMF_Creator;
@@ -25,9 +26,9 @@ public class TODELETEmainTest {
         EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory(EMF_Creator.DbSelector.DEV, EMF_Creator.Strategy.CREATE);
         ApiFacadeImplementation facade = ApiFacadeImplementation.getApiFacade(EMF);
         Gson gson = new Gson();
-        Map<String, String> map = facade.allApiData("Die%20Hard");
-        
-        System.out.println(gson.toJson(map.get("movieInfo")));
+        String map = facade.allApiData("Die%20Hard");
+        MovieAllDTO movie = facade.allMovieData("Die%20Hard");
+        System.out.println(gson.toJson(movie));
 
     }
 }
