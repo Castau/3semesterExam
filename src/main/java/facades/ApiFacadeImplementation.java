@@ -3,6 +3,7 @@ package facades;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import dto.ImdbDTO;
 import dto.MetaCriticDTO;
 import dto.MovieAllDTO;
@@ -10,11 +11,11 @@ import dto.MovieSimpleDTO;
 import dto.RottenTomatoesDTO;
 import entities.Role;
 import entities.User;
+import errorhandling.NotFoundException;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
@@ -36,11 +37,12 @@ import org.apache.commons.lang3.tuple.Pair;
  *
  * @author Camilla
  */
-public class ApiFacadeImplementation {
+public class ApiFacadeImplementation implements ApiFacadeInterface{
 
     private ExecutorService executor;
-    private String url = "http://exam-1187.mydemos.dk/";
-    private String[] ENDPOINTS = {"movieInfo/", "moviePoster/", "imdbScore/", "tomatoesScore/", "metacriticScore/"};
+    private final String url = "http://exam-1187.mydemos.dk/";
+    private final String[] ENDPOINTS = {"movieInfo/", "moviePoster/", "imdbScore/", "tomatoesScore/", "metacriticScore/"};
+    private final Gson GSON = new Gson();
 
     private static ApiFacadeImplementation facade;
     private static EntityManagerFactory emf;
@@ -60,6 +62,7 @@ public class ApiFacadeImplementation {
         return emf.createEntityManager();
     }
 
+    @Override
     public MovieSimpleDTO simpleMovieData(String movieTitle) {
         MovieSimpleDTO movieDTO = new MovieSimpleDTO();
         
@@ -76,16 +79,13 @@ public class ApiFacadeImplementation {
             JsonObject moviePosterJsonObject = new JsonParser().parse(apiData.get("moviePoster")).getAsJsonObject();
             movieDTO.setPoster(moviePosterJsonObject.get("poster").getAsString());
             
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ExecutionException ex) {
-            Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TimeoutException ex) {
+        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
             Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }
         return movieDTO;
     }
     
+    @Override
     public MovieAllDTO allMovieData(String movieTitle) {
             MovieAllDTO movieDTO = new MovieAllDTO();
             MetaCriticDTO metaDTO = new MetaCriticDTO();
@@ -127,17 +127,13 @@ public class ApiFacadeImplementation {
             movieDTO.setMetaCritic(metaDTO);
             movieDTO.setTomatoes(tomatoesDTO);
             
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ExecutionException ex) {
-            Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TimeoutException ex) {
+        } catch (InterruptedException | ExecutionException | TimeoutException ex) {
             Logger.getLogger(ApiFacadeImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }
         return movieDTO;
     }
 
-    public Map<String, String> allApiData(String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {
+    private Map<String, String> allApiData(String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {
     //public String allApiData(String movieTitle) throws InterruptedException, ExecutionException, TimeoutException {    
         //String result = "";
         executor = Executors.newCachedThreadPool();
@@ -168,9 +164,7 @@ public class ApiFacadeImplementation {
         //return result;
     }
 
-    private String getApiData(String url) {
-        System.out.println("URL " + url);
-        String result = "";
+    private String getApiData(String url) throws NotFoundException {
         try {
             URL siteURL = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) siteURL.openConnection();
@@ -183,14 +177,15 @@ public class ApiFacadeImplementation {
                     response += scan.nextLine();
                 }
                 Gson gson = new Gson();
-                result = gson.fromJson(response, JsonObject.class).toString();
+                //return gson.fromJson(response, JsonObject.class);
+                return GSON.fromJson(response, JsonObject.class).toString();
             }
-        } catch (Exception e) {
-            result = "";
+        } catch (JsonSyntaxException | IOException e) {
+            throw new NotFoundException(e.getMessage());
         }
-        return result;
     }
 
+    @Override
     public boolean testData() {
         EntityManager em = getEntityManager();
 

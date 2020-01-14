@@ -24,11 +24,11 @@ public class TestMain {
         
         MovieSimpleDTO simple = facade.simpleMovieData("Grease");
         
-        Map<String, String> map = facade.allApiData("Die%20Hard");
-        Map<String, String> map1 = facade.allApiData("Grease");
+//        Map<String, String> map = facade.allApiData("Die%20Hard");
+//        Map<String, String> map1 = facade.allApiData("Grease");
         
-        System.out.println(gson.toJson(map.get("movieInfo")));
-        System.out.println(gson.toJson(map1.get("movieInfo")));
+//        System.out.println(gson.toJson(map.get("movieInfo")));
+//        System.out.println(gson.toJson(map1.get("movieInfo")));
         
         System.out.println("MOVIE");
         System.out.println(movie);
