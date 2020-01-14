@@ -27,8 +27,10 @@ public class TODELETEmainTest {
         ApiFacadeImplementation facade = ApiFacadeImplementation.getApiFacade(EMF);
         Gson gson = new Gson();
         String map = facade.allApiData("Die%20Hard");
-        MovieAllDTO movie = facade.allMovieData("Die%20Hard");
-        System.out.println(gson.toJson(movie));
+        String map1 = facade.allApiData("Grease");
+        //MovieAllDTO movie = facade.allMovieData("Die%20Hard");
+        System.out.println(gson.toJson(map));
+        System.out.println(gson.toJson(map1));
 
     }
 }

@@ -116,13 +116,13 @@ public class ApiFacadeImplementation {
         while (!queue.isEmpty()) {
             Future<Pair<String, String>> epPair = queue.poll();
             if (epPair.isDone()) {
-                result = result + epPair.get().getValue();
+                result = result + "," + epPair.get().getValue();
                 //movieMap.put(epPair.get().getKey(), epPair.get().getValue());
             } else {
                 queue.add(epPair);
             }
         }
-        executor.shutdown();
+        //executor.shutdown();
         //return movieMap;
         return result;
     }
