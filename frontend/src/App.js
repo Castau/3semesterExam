@@ -4,6 +4,7 @@ import WelcomePage from "./components/Welcome.jsx";
 import LogInScreen from "./components/LogInScreen.jsx";
 import AllMovie from "./components/AllMovie.jsx";
 import SimpleMovie from "./components/SimpleMovie.jsx";
+import Admin from "./components/Admin.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './index.css';
 import './Welcome.css';
@@ -46,8 +47,12 @@ const App = () => {
               <AllMovie
                 loggedIn={loggedIn} />
             </Route>
-            <Route
-              component={NoMatch} />
+            <Route path="/admin">
+              <Admin
+                loggedIn={loggedIn}
+                roles={roles} />
+            </Route>
+            <Route component={NoMatch} />
           </Switch>
         </div>
       </Router>
@@ -103,6 +108,14 @@ const Header = ({ loggedIn, setLoggedIn, roles, setRoles }) => {
           <NavLink activeClassName="active" to="/allmovie">
             All Movie Data
           </NavLink>
+        </li>
+      }
+
+      {loggedIn && roles.includes("admin") &&
+        <li>
+          <NavLink to="/admin">
+            Admin
+        </NavLink>
         </li>
       }
     </ul>

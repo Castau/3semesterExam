@@ -34,7 +34,7 @@ const SimpleMovie = () => {
     <>
       <h2 className="mt-5 "><Badge variant="info">Simple Movie Data</Badge></h2>
       <h4> <Badge variant="danger">{movieErrorMessage}</Badge></h4>
-      <input placeholder="Movie Title" id="password" type="text" onChange={onChange} />
+      <input placeholder="Movie Title" id="title" type="text" onChange={onChange} />
       <button className="btn-dark mb-3" onClick={onClick}>Movie Info</button>
       {movieInfo &&
         <Card className="p-3">

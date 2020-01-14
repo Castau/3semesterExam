@@ -7,6 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import dto.ImdbDTO;
 import dto.MetaCriticDTO;
 import dto.MovieAllDTO;
+import dto.MovieCountDTO;
 import dto.MovieSimpleDTO;
 import dto.RottenTomatoesDTO;
 import entities.MovieCache;
@@ -98,15 +99,23 @@ public class ApiFacadeImplementation implements ApiFacadeInterface {
         try {
             List<MovieCache> moviecacheList = em.createNamedQuery("MovieCache.getByTitle", MovieCache.class).setParameter("title", title).getResultList();
             if (!moviecacheList.isEmpty() && moviecacheList.get(0) != null) {
+                upDateCount(em, moviecacheList.get(0));
                 return moviecacheList.get(0);
             } else {
                 return null;
-            } 
+            }
         } catch (IllegalStateException | PersistenceException | IllegalArgumentException e) {
             throw new IllegalArgumentException("Database error");
         } finally {
             em.close();
         }
+    }
+
+    private void upDateCount(EntityManager em, MovieCache moviecache) {
+        moviecache.setCount(moviecache.getCount() + 1);
+        em.getTransaction().begin();
+        em.merge(moviecache);
+        em.getTransaction().commit();
     }
 
     private void saveToCache(MovieAllDTO movieDTO) {
@@ -116,7 +125,7 @@ public class ApiFacadeImplementation implements ApiFacadeInterface {
             em.getTransaction().begin();
             em.persist(moviecache);
             em.getTransaction().commit();
-            
+
         } catch (IllegalStateException | PersistenceException | IllegalArgumentException e) {
             em.getTransaction().rollback();
             throw new IllegalArgumentException("Rollback of transaction saveToCache");
@@ -125,6 +134,26 @@ public class ApiFacadeImplementation implements ApiFacadeInterface {
         }
     }
 
+    @Override
+    public MovieCountDTO getMovieCount(String title) throws NotFoundException{
+        EntityManager em = getEntityManager();
+        MovieCountDTO moviecountDTO = new MovieCountDTO();
+        try {
+            List<MovieCache> moviecacheList = em.createNamedQuery("MovieCache.getByTitle", MovieCache.class).setParameter("title", title).getResultList();
+            if (!moviecacheList.isEmpty() && moviecacheList.get(0) != null) {
+                moviecountDTO.setCount(moviecacheList.get(0).getCount());
+                moviecountDTO.setTitle((moviecacheList.get(0).getTitle()));
+                return moviecountDTO;
+            } else {
+                throw new NotFoundException("Movie not found");
+            }
+        } catch (IllegalStateException | PersistenceException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("Database error");
+        } finally {
+            em.close();
+        }
+    }
+    
     @Override
     public MovieAllDTO allMovieData(String movieTitle) {
         MovieAllDTO movieDTO = new MovieAllDTO();

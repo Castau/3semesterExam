@@ -1,6 +1,7 @@
 package rest;
 
 import dto.MovieAllDTO;
+import dto.MovieCountDTO;
 import dto.MovieSimpleDTO;
 import facades.ApiFacadeImplementation;
 import facades.ApiFacadeInterface;
@@ -52,6 +53,14 @@ public class ApiResource {
         return facade.allMovieData(title);
     }
 
+    @GET
+    @Path("movieCount/{title}")
+    @RolesAllowed({"admin"})
+    @Produces({MediaType.APPLICATION_JSON})
+    public MovieCountDTO adminMovieCount(@PathParam("title") String title) {
+        return facade.getMovieCount(title);
+    }
+    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("user")
