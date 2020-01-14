@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import facade from "./apiFacade";
 import WelcomePage from "./components/Welcome.jsx";
 import LogInScreen from "./components/LogInScreen.jsx";
+import AllMovie from "./components/AllMovie.jsx";
+import SimpleMovie from "./components/SimpleMovie.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './index.css';
 import './Welcome.css';
@@ -36,6 +38,13 @@ const App = () => {
                 setLoggedIn={setLoggedIn}
                 roles={roles}
                 setRoles={setRoles} />
+            </Route>
+            <Route path="/simplemovie">
+              <SimpleMovie />
+            </Route>
+            <Route path="/allmovie">
+              <AllMovie
+                loggedIn={loggedIn} />
             </Route>
             <Route
               component={NoMatch} />
@@ -77,7 +86,23 @@ const Header = ({ loggedIn, setLoggedIn, roles, setRoles }) => {
             setRoles([]);
           }} to="/login">
             Log out
-        </NavLink>
+          </NavLink>
+        </li>
+      }
+
+      {!loggedIn &&
+        <li>
+          <NavLink activeClassName="active" to="/simplemovie">
+            Simple Movie Data
+          </NavLink>
+        </li>
+      }
+
+      {loggedIn &&
+        <li>
+          <NavLink activeClassName="active" to="/allmovie">
+            All Movie Data
+          </NavLink>
         </li>
       }
     </ul>
