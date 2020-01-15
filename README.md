@@ -15,7 +15,7 @@
 * [https://camillastaunstrup.dk/sem3exam/api/info/testdata](Populate database with testuser (can be done from frontend as well))
 
 #### The Exam
-[https://docs.google.com/document/d/16N3h0TVzfwPJEr8SwP2l_DAvGsODrjtc13TtTBnjGK8/edit](Exam paper)
+* [https://docs.google.com/document/d/16N3h0TVzfwPJEr8SwP2l_DAvGsODrjtc13TtTBnjGK8/edit](Exam paper)
 
 
 
