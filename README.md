@@ -14,7 +14,7 @@
 * [Deploy - camillastaunstrup.dk/sem3exam](https://camillastaunstrup.dk/sem3exam/)
 * [Populate database with testuser - can be done from frontend as well](https://camillastaunstrup.dk/sem3exam/api/info/testdata)
 
-#### The Assignment
+### The Assignment
 * [Exam Paper](https://docs.google.com/document/d/16N3h0TVzfwPJEr8SwP2l_DAvGsODrjtc13TtTBnjGK8/edit)
 
 ## Movie site with data fetched from external API’s
@@ -61,14 +61,19 @@ This/these Entity class(es) must be used to solve the following requirements, gi
   * Allow for local queries (not involving a remote request) like:
     * Find movies from a specific year
     * Find all movies with a specific actor
-* Implement a new endpoint:  api/movie-count/:title
+* Implement a new endpoint:  `api/movie-count/:title`
 which should return a JSON-response including the total number of requests made for this specific movie.
 This endpoint should require users to be authenticated with an “admin-role”. 
-* Change the endpoint api/movie-info-all/:title to return the cached value implemented above instead of making the external requests (the count value, must still be updated)
+* Change the endpoint `api/movie-info-all/:title` to return the cached value implemented above instead of making the external requests (the count value, must still be updated)
 
+#### Frontend
+* If not already supplied by your start-code, provide a login feature
+* Create a page that allows all clients to access, and see the response, from this endpoint: `api/movie-info-simple/:title`. Come up with a way for users to supply the title
+* Create a page that allows logged-in users to access, and see the response, from this endpoint:
+`api/movie-info-all/:title`
+* Create a page, accessible only for admins, that will make it possible to use the api/movie-count/:title endpoint and present the result.
 
-
-
+__Extra__: If you have time, add any features you find relevant (to showcase your skills) if not present in the requirements given above.
 
 
 
