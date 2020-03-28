@@ -2,9 +2,7 @@
 
 
 ### Build Status
-* [Link to build](https://travis-ci.org/Castau/3semesterExam?utm_medium=notification&utm_source=github_status)  
-* ~~[![Build Status](https://travis-ci.org/Castau/3semesterExam.svg?branch=master)](https://travis-ci.org/Castau/3semesterExam)~~ __Backend server has been shut down__
-
+* [Link to build](https://travis-ci.org/Castau/3semesterExam?utm_medium=notification&utm_source=github_status) __Backend server has been shut down__
 
 ### Deployed Client Application
 * [Frontend Repository - the frontend folder above](https://github.com/Castau/3semesterExam/tree/master/frontend)
