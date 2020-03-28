@@ -8,7 +8,7 @@
 
 ### Deployed Client Application
 * [Frontend Repository - the frontend folder above](https://github.com/Castau/3semesterExam/tree/master/frontend)
-* [Deploy - sem3exam-camilla.surge.sh](https://sem3exam-camilla.surge.sh/)
+* [Deploy - sem3exam-camilla.surge.sh](https://sem3exam-camilla.surge.sh/) __Frontens still up but server has been shut down__
 
 ### Backend Application
 * [Backend Repository - the src folder above](https://github.com/Castau/3semesterExam/tree/master/src)  
