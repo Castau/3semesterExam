@@ -18,7 +18,7 @@
 ## The Assignment
 * ~~[Exam Paper](https://docs.google.com/document/d/16N3h0TVzfwPJEr8SwP2l_DAvGsODrjtc13TtTBnjGK8/edit)~~ - __has been removed by the school, se below__
 
-## Movie site with data fetched from external API’s
+### Movie site with data fetched from external API’s
 Your task is to create a proof of concept solution for a site where users can request information related to specific movies. You will use a single API (set up for this exam) for what you must do, but the exercise simulates an architecture as sketched in this figure, and you should interpret each endpoint in the supplied API as a separate server. The single Server which includes all endpoints for this exercise: [https://exam-1187.mydemos.dk/ (has been taken down)](https://exam-1187.mydemos.dk/)  
   
 #### These are the initial requirements given for the project.  
