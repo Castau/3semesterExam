@@ -3,7 +3,7 @@
 
 ### Build Status
 __Backend server has been shut down__
-~~* [![Build Status](https://travis-ci.org/Castau/3semesterExam.svg?branch=master)](https://travis-ci.org/Castau/3semesterExam)~~
+* ~~[![Build Status](https://travis-ci.org/Castau/3semesterExam.svg?branch=master)](https://travis-ci.org/Castau/3semesterExam)~~
 * [Link to build](https://travis-ci.org/Castau/3semesterExam?utm_medium=notification&utm_source=github_status)
 
 ### Deployed Client Application
@@ -13,11 +13,11 @@ __Backend server has been shut down__
 ### Backend Application
 __Backend server has been shut down__
 * [Backend Repository - the src folder above](https://github.com/Castau/3semesterExam/tree/master/src)
-~~* [Deploy - camillastaunstrup.dk/sem3exam](https://camillastaunstrup.dk/sem3exam/)~~
-~~* [Populate database with testuser - can be done from frontend as well](https://camillastaunstrup.dk/sem3exam/api/info/testdata)~~
+* ~~[Deploy - camillastaunstrup.dk/sem3exam](https://camillastaunstrup.dk/sem3exam/)~~
+* ~~[Populate database with testuser - can be done from frontend as well](https://camillastaunstrup.dk/sem3exam/api/info/testdata)~~
 
 ## The Assignment
-* [Exam Paper](https://docs.google.com/document/d/16N3h0TVzfwPJEr8SwP2l_DAvGsODrjtc13TtTBnjGK8/edit) - __has been removed__
+* ~~[Exam Paper](https://docs.google.com/document/d/16N3h0TVzfwPJEr8SwP2l_DAvGsODrjtc13TtTBnjGK8/edit)~~ - __has been removed__
 
 ## Movie site with data fetched from external API’s
 Your task is to create a proof of concept solution for a site where users can request information related to specific movies. You will use a single API (set up for this exam) for what you must do, but the exercise simulates an architecture as sketched in this figure, and you should interpret each endpoint in the supplied API as a separate server. The single Server which includes all endpoints for this exercise: [https://exam-1187.mydemos.dk/ (has been taken down)](https://exam-1187.mydemos.dk/)  
